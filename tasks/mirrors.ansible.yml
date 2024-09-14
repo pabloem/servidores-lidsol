@@ -1,0 +1,86 @@
+# Mirrors setup task
+---
+- name: Install rsync
+  ansible.builtin.apt:
+    name: rsync
+    state: present
+
+- name: Ensure user mirrors exists
+  ansible.builtin.user:
+    name: mirrors
+    state: present
+    system: false
+
+- name: Copy archlinux-syncrepo.sh
+  ansible.builtin.copy:
+    src: files/mirrors/archlinux-syncrepo.sh
+    dest: /usr/local/bin/archlinux-syncrepo.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy archlinux-mirror-sync.service
+  ansible.builtin.copy:
+    src: files/mirrors/archlinux-mirror-sync.service
+    dest: /etc/systemd/system/archlinux-mirror-sync.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy archlinux-mirror-sync.timer
+  ansible.builtin.copy:
+    src: files/mirrors/archlinux-mirror-sync.timer
+    dest: /etc/systemd/system/archlinux-mirror-sync.timer
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable and start archlinux-mirror-sync.timer
+  ansible.builtin.systemd:
+    name: archlinux-mirror-sync.timer
+    enabled: true
+    state: started
+
+- name: Copy debian-mirror-sync.service
+  ansible.builtin.copy:
+    src: files/mirrors/debian-mirror-sync.service
+    dest: /etc/systemd/system/debian-mirror-sync.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy debian-mirror-sync.timer
+  ansible.builtin.copy:
+    src: files/mirrors/debian-mirror-sync.timer
+    dest: /etc/systemd/system/debian-mirror-sync.timer
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable and start debian-mirror-sync.timer
+  ansible.builtin.systemd:
+    name: debian-mirror-sync.timer
+    enabled: true
+    state: started
+
+- name: Copy debian-cd-mirror-sync.service
+  ansible.builtin.copy:
+    src: files/mirrors/debian-cd-mirror-sync.service
+    dest: /etc/systemd/system/debian-cd-mirror-sync.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy debian-cd-mirror-sync.timer
+  ansible.builtin.copy:
+    src: files/mirrors/debian-cd-mirror-sync.timer
+    dest: /etc/systemd/system/debian-cd-mirror-sync.timer
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable and start debian-cd-mirror-sync.timer
+  ansible.builtin.systemd:
+    name: debian-cd-mirror-sync.timer
+    enabled: true
+    state: started

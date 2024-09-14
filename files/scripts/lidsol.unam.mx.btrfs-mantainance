@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+
+LOG_FILE=/var/log/btrfs-mantainance
+
+RESPONSE="File server: Starting weekly disk check"
+
+# Send start message
+echo "$(date) - ${RESPONSE}" >> ${LOG_FILE}
+
+# Create snapshots
+/usr/bin/btrfs subvolume snapshot -r /.snapshots/@rootfs-$(date -I) /
+/usr/bin/btrfs subvolume snapshot -r /.snapshots/@varfs-$(date -I) /var
+
+# Start long smart test on HDDs
+for disk in sda sdb; do
+  /usr/sbin/smartctl -t long /dev/${disk}
+done
+
+# Start btrfs scrub
+/usr/bin/btrfs scrub start /
+
+# Wait for them to finish the scans
+sleep 6h
+
+# Generate response
+echo "$(date) - File server: results from disks checking"
+for disk in sda sdb; do
+    echo "Smart data for /dev/${disk}:" >> ${LOG_FILE}
+    echo "$(/usr/sbin/smartctl -a /dev/${disk})" >> ${LOG_FILE}
+done
+echo "Btrfs data:
+$(/usr/bin/btrfs scrub status /)" >> ${LOG_FILE}

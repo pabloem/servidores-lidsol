@@ -1,0 +1,48 @@
+# Setup tor node on the server
+---
+- name: Install required packages
+  ansible.builtin.apt:
+    name: apt-transport-https
+    state: present
+
+- name: Save tor keyring
+  ansible.builtin.shell:
+    cmd: wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/deb.torproject.org-keyring.gpg >/dev/null
+    creates: /usr/share/keyrings/deb.torproject.org-keyring.gpg
+
+- name: Add tor repository
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/tor.list
+    src: files/tor/tor.list
+    mode: '0644'
+
+- name: Update package cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install tor
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - tor
+    - deb.torproject.org-keyring
+
+- name: Copy configuration file
+  ansible.builtin.copy:
+    dest: /etc/tor/torrc
+    src: files/tor/torrc
+    mode: '0644'
+
+- name: Copy keys
+  ansible.builtin.unarchive:
+    src: files/tor/keys.tar.gz
+    dest: /var/lib/tor
+    creates: /var/lib/tor/keys
+    decrypt: true
+
+- name: Enable and restart tor
+  ansible.builtin.systemd:
+    name: tor
+    enabled: true
+    state: started

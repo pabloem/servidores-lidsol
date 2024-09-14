@@ -1,0 +1,10 @@
+[Unit]
+Description=Sync Debian Mirror
+After=network.target
+
+[Service]
+Type=simple
+User=mirrors
+Group=mirrors
+ExecStart=/home/mirrors/bin/ftpsync sync:all
+WorkingDirectory=/home/mirrors

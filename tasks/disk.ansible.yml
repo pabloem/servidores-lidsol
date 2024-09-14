@@ -1,0 +1,29 @@
+# Disk monitoring and mantainance script
+---
+- name: Install smartmontools and btrfs tools
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - smartmontools
+    - btrfs-progs
+
+- name: Copy mantainance script
+  ansible.builtin.copy:
+    src: files/scripts/{{ inventory_hostname }}.btrfs-mantainance
+    dest: /usr/local/bin/btrfs-mantainance
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create cron job for btrfs mantainance
+  ansible.builtin.cron:
+    name: btrfs-mantainance
+    minute: 0
+    hour: 2
+    day: 1
+    month: '*'
+    weekday: '*'
+    job: /usr/local/bin/btrfs-mantainance
+    user: root
+    state: present

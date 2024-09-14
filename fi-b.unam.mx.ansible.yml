@@ -1,0 +1,29 @@
+---
+- name: Setup full lidsol.fi-b.unam.mx with services
+  hosts: lidsol.fi-b.unam.mx
+  become: true
+
+  tasks:
+    - name: Essential configuration
+      ansible.builtin.import_tasks:
+        file: tasks/essentials.ansible.yml
+
+    - name: Disk monitoring and mantainance script
+      ansible.builtin.import_tasks:
+        file: tasks/disk.ansible.yml
+
+    # - name: Tor node
+      # ansible.builtin.import_tasks:
+        # file: tasks/tor-node.ansible.yml
+
+    - name: FTPSync installation and configuration
+      ansible.builtin.import_tasks:
+        file: tasks/ftpsync.ansible.yml
+
+    - name: Rsyncd install and configuration
+      ansible.builtin.import_tasks:
+        file: tasks/rsyncd.ansible.yml
+
+    - name: Setup nginx for http(s) services
+      ansible.builtin.import_tasks:
+        file: tasks/nginx.ansible.yml

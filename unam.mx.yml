@@ -1,0 +1,13 @@
+---
+- name: Setup full lidsol.unam.mx with services
+  hosts: lidsol.unam.mx
+  become: true
+
+  tasks:
+    - name: Essential configuration
+      ansible.builtin.import_tasks:
+        file: tasks/essentials.ansible.yml
+
+    - name: Disk monitoring and mantainance script
+      ansible.builtin.import_tasks:
+        file: tasks/disk.ansible.yml
