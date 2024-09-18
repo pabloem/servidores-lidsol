@@ -27,3 +27,7 @@
     - name: Setup nginx for http(s) services
       ansible.builtin.import_tasks:
         file: tasks/nginx.ansible.yml
+
+    - name: Mirrors configuration
+      ansible.builtin.import_tasks:
+        file: tasks/mirrors.ansible.yml

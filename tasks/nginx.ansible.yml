@@ -34,6 +34,14 @@
     group: root
     mode: '0644'
 
+- name: Copy almalinux repository configuration file
+  ansible.builtin.copy:
+    src: files/nginx/conf.d/almalinux.site
+    dest: /etc/nginx/conf.d/almalinux.site
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: Copy archlinux repository configuration file
   ansible.builtin.copy:
     src: files/nginx/conf.d/archlinux.site

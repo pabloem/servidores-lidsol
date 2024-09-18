@@ -11,6 +11,29 @@
     state: present
     system: false
 
+- name: Copy almalinux-mirror-sync.service
+  ansible.builtin.copy:
+    src: files/mirrors/almalinux-mirror-sync.service
+    dest: /etc/systemd/system/almalinux-mirror-sync.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy almalinux-mirror-sync.timer
+
+  ansible.builtin.copy:
+    src: files/mirrors/almalinux-mirror-sync.timer
+    dest: /etc/systemd/system/almalinux-mirror-sync.timer
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable and start almalinux-mirror-sync.timer
+  ansible.builtin.systemd:
+    name: almalinux-mirror-sync.timer
+    enabled: true
+    state: started
+
 - name: Copy archlinux-syncrepo.sh
   ansible.builtin.copy:
     src: files/mirrors/archlinux-syncrepo.sh
