@@ -6,5 +6,5 @@ After=network.target
 Type=simple
 User=mirrors
 Group=mirrors
-ExecStart=/usr/bin/rsync --times --links --hard-links --partial --block-size=8192 --delete --archive rsync://mirrors.ocf.berkeley.edu/debian-cd/ /srv/debian-cd/
+ExecStart=/usr/bin/rsync --bwlimit=2048 --times --links --hard-links --partial --block-size=8192 --delete --archive rsync://mirrors.ocf.berkeley.edu/debian-cd/ /srv/debian-cd/
 WorkingDirectory=/home/mirrors
