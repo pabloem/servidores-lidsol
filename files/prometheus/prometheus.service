@@ -1,0 +1,13 @@
+[Unit]
+Description=Prometheus Service
+After=network.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/config.yml
+WorkingDirectory=/etc/prometheus
+
+[Install]
+WantedBy=multi-user.target

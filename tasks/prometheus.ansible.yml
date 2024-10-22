@@ -1,0 +1,83 @@
+# Setup node_exporter
+---
+- name: Download prometheus
+  ansible.builtin.get_url:
+    url: https://github.com/prometheus/prometheus/releases/download/v2.53.2/prometheus-2.53.2.linux-amd64.tar.gz
+    dest: /tmp/prometheus-2.53.2.linux-amd64.tar.gz
+    mode: '0644'
+
+- name: Extract prometheus
+  ansible.builtin.unarchive:
+    src: /tmp/prometheus-2.53.2.linux-amd64.tar.gz
+    dest: /tmp
+    remote_src: true
+    creates: /tmp/prometheus-2.53.2.linux-amd64/prometheus
+
+- name: Copy prometheus binary
+  ansible.builtin.copy:
+    src: /tmp/prometheus-2.53.2.linux-amd64/prometheus
+    dest: /usr/local/bin/prometheus
+    mode: '0755'
+    owner: root
+    group: root
+    remote_src: true
+
+- name: Create prometheus user
+  ansible.builtin.user:
+    name: prometheus
+    system: true
+    shell: /bin/false
+    home: /var/lib/prometheus
+
+- name: Create prometheus directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+  loop:
+    - /etc/prometheus
+    - /var/lib/prometheus
+    - /var/log/prometheus
+
+- name: Copy prometheus configuration
+  ansible.builtin.copy:
+    src: files/prometheus/config.yml
+    dest: /etc/prometheus/config.yml
+    mode: '0644'
+    owner: root
+    group: root
+
+
+- name: Create prometheus service
+  ansible.builtin.copy:
+    src: files/prometheus/prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Start prometheus
+  ansible.builtin.service:
+    name: prometheus
+    enabled: true
+    state: restarted
+    daemon_reload: true
+
+- name: Ensure prometheus is running
+  ansible.builtin.wait_for:
+    port: 9090
+    delay: 10
+    timeout: 300
+    state: started
+
+- name: Remove prometheus tarball
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/prometheus-2.53.2.linux-amd64.tar.gz
+
+- name: Remove prometheus extracted directory
+  ansible.builtin.file:
+    path: /tmp/prometheus-2.53.2.linux-amd64/
+    state: absent
