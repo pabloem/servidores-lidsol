@@ -39,7 +39,7 @@
         immediate: true
       with_items:
         - 9001/tcp
-        - 9002/tcp
+        - 9100/tcp
 
     - name: Disk monitoring and mantainance script
       ansible.builtin.import_tasks:
@@ -64,3 +64,7 @@
     - name: Mirrors configuration
       ansible.builtin.import_tasks:
         file: tasks/mirrors.ansible.yml
+
+    - name: Prometheus node_exporter
+      ansible.builtin.import_tasks:
+        file: tasks/node_exporter.ansible.yml
