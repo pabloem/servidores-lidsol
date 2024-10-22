@@ -8,13 +8,57 @@
       ansible.builtin.import_tasks:
         file: tasks/essentials.ansible.yml
 
+    - name: Setup firewalld
+      ansible.builtin.apt:
+        name: firewalld
+        state: present
+
+    - name: Enable firewalld
+      ansible.builtin.service:
+        name: firewalld
+        enabled: true
+        state: started
+
+    - name: Allow services on firewalld
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        permanent: true
+        state: enabled
+        immediate: true
+      with_items:
+        - http
+        - https
+        - ssh
+        - rsyncd
+
+    - name: Allow ports on firewalld
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+        immediate: true
+      with_items:
+        - 9001/tcp
+
+    - name: Prometheus node_exporter
+      ansible.builtin.import_tasks:
+        file: tasks/node_exporter.ansible.yml
+
+    - name: Prometheus install
+      ansible.builtin.import_tasks:
+        file: tasks/prometheus.ansible.yml
+
+    - name: Grafana install
+      ansible.builtin.import_tasks:
+        file: tasks/grafana.ansible.yml
+
     - name: Disk monitoring and mantainance script
       ansible.builtin.import_tasks:
         file: tasks/disk.ansible.yml
 
-    # - name: Tor node
-      # ansible.builtin.import_tasks:
-        # file: tasks/tor-node.ansible.yml
+    - name: Tor node
+      ansible.builtin.import_tasks:
+        file: tasks/tor-node.ansible.yml
 
     - name: FTPSync installation and configuration
       ansible.builtin.import_tasks:
