@@ -6,5 +6,5 @@ After=network.target
 Type=simple
 User=mirrors
 Group=mirrors
-ExecStart=/home/mirrors/bin/ftpsync sync:all
+ExecStart=/home/mirrors/bin/debian-mirror-sync-check.sh
 WorkingDirectory=/home/mirrors
