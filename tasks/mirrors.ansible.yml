@@ -64,6 +64,14 @@
     enabled: true
     state: started
 
+- name: Copy debian-mirror-sync-check.sh script
+  ansible.builtin.copy:
+    src: files/mirrors/debian-mirror-sync-check.sh
+    dest: /home/mirrors/bin/debian-mirror-sync-check.sh
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: Copy debian-mirror-sync.service
   ansible.builtin.copy:
     src: files/mirrors/debian-mirror-sync.service
