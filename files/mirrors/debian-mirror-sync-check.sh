@@ -16,8 +16,10 @@
 # This script is intended to be run repeatedly by a cron job or
 # a systemd timer.
 
+MIRROR_DIRECTORY=/srv/debian
+
 # Set the upstream mirror URL
-UPSTREAM_MIRROR=mirrors.ocf.berkeley.edu
+UPSTREAM_MIRROR=debian.csail.mit.edu
 UPSTREAM_MIRROR_URL="https://${UPSTREAM_MIRROR}/debian/project/trace/${UPSTREAM_MIRROR}"
 
 upstream_time=$(curl -s "${UPSTREAM_MIRROR_URL}" | head -n 1)
@@ -25,8 +27,8 @@ upstream_time_epoch=$(date -d "${upstream_time}" +%s)
 
 LOCAL_MIRROR="lidsol.fi-b.unam.mx"
 local_mirror_time_epoch=0
-if [ -f /home/mirrors/debian/project/trace/${UPSTREAM_MIRROR} ]; then
-    local_mirror_time=$(cat /home/mirrors/debian/project/trace/${UPSTREAM_MIRROR} | head -n 1)
+if [ -f ${MIRROR_DIRECTORY}/project/trace/${UPSTREAM_MIRROR} ]; then
+    local_mirror_time=$(cat ${MIRROR_DIRECTORY}/project/trace/${UPSTREAM_MIRROR} | head -n 1)
     local_mirror_time_epoch=$(date -d "${local_mirror_time}" +%s)
 fi
 
