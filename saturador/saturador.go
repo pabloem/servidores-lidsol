@@ -20,10 +20,14 @@ import (
 
 func runServer(port int) {
 	fmt.Println("Running server on port", port)
-	const tickDuration = 2 * time.Second
+	const tickDuration = 20 * time.Second
 	var byteCounter int64 = 0
 	var tickCounter int = 0
 	var events evio.Events = evio.Events{
+		Opened: func(c evio.Conn) (out []byte, opts evio.Options, action evio.Action) {
+			fmt.Println("Connection opened", c.RemoteAddr().String(), ">", c.LocalAddr().String())
+			return nil, evio.Options{}, evio.None
+		},
 		Data: func(c evio.Conn, in []byte) (out []byte, action evio.Action) {
 			byteCounter += int64(len(in))
 			return in, evio.None
