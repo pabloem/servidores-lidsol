@@ -42,10 +42,11 @@ function should_pull() {
     # Log input of function to stderr
     local_mirror_time_epoch=$(date -d "$local_mirror_time" +%s)
     upstream_time_epoch=$(date -d "$upstream_time" +%s)
+    current_time_epoch=$(date -d "$current_time" +%s)
 
     # If it has been less than 2 hours since the upstream mirror started updating,
     # then the mirror is considered up-to-date
-    if [ $upstream_time_epoch -gt $(date -d "$current_time - 2 hours" +%s) ]; then
+    if [ $upstream_time_epoch -gt $(($current_time_epoch - 7200)) ]; then
         # Log the operation above to stderr
         # echo "upstream_time_epoch minus current_time: $(($upstream_time_epoch - $(date -d "$current_time" +%s)))" >&2
         echo "false"
@@ -66,7 +67,7 @@ if [ "$1" == "--test" ]; then
     return
 fi
 
-if [ $(should_pull "$(get_local_time)" "$(get_upstream_time) $(date -u)") == "true" ]; then
+if [ $(should_pull "$(get_local_time)" "$(get_upstream_time)" "$(date -u)") == "true" ]; then
     echo "Local mirror is out of date, pulling from upstream mirror. Upstream date: $(get_upstream_time), Local date: $(get_local_time) - current date: $(date -u)"
     cd ${MIRROR_DIRECTORY}
     /home/mirrors/bin/ftpsync sync:all
