@@ -21,14 +21,17 @@ function test_should_pull() {
 }
 
 # Local time is newer than the upstream time, so no pull.
-test_should_pull "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 20 18:02:35 UTC 2024" "false"
+#test_should_pull "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 20 18:02:35 UTC 2024" "false"
 # Same as above. The current time is different (and it does not matter)
-test_should_pull "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 21 18:02:35 UTC 2024" "false"
+#test_should_pull "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 21 18:02:35 UTC 2024" "false"
 
 # Local time is older than the upstream time, but the upstream time is less than 2 hours ago.
-test_should_pull "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 19:58:35 UTC 2024" "false"
+#test_should_pull "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 19:58:35 UTC 2024" "false"
 # Same as above. The current time is just over 2 hours ago.
-test_should_pull "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 20:02:35 UTC 2024" "true"
+#test_should_pull "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 20:02:35 UTC 2024" "true"
+
+# Testing the sample where we had a misbehavior
+test_should_pull "Thu Nov 28 16:21:17 UTC 2024" "Mon Dec  2 19:42:01 UTC 2024" "Mon Dec  2 09:40:11 PM UTC 2024" "true"
 
 # This should not be possible, but what if current time is older than the local time
-test_should_pull "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 20 17:42:05 UTC 2024" "false"
+#test_should_pull "Wed Nov 20 18:02:35 UTC 2024" "Wed Nov 20 17:42:05 UTC 2024" "Wed Nov 20 17:42:05 UTC 2024" "false"

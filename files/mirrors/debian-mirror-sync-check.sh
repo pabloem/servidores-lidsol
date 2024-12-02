@@ -47,7 +47,7 @@ function should_pull() {
     # then the mirror is considered up-to-date
     if [ $upstream_time_epoch -gt $(date -d "$current_time - 2 hours" +%s) ]; then
         # Log the operation above to stderr
-        # echo "upstream_time_epoch minus current_time: $(($upstream_time_epoch - $(date -d "$current_time" +%s)))" >&2
+	echo "upstream is greater than current minus two hours" >&2
         echo "false"
         return
     fi
@@ -57,6 +57,7 @@ function should_pull() {
     if [ $local_mirror_time_epoch -lt $upstream_time_epoch ]; then
         echo "true"
     else
+	echo "local is less than upstream" >&2
         echo "false"
     fi
 }
