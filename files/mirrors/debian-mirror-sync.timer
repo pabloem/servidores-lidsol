@@ -1,9 +1,8 @@
 [Unit]
-Description=Timer to sync Debian Mirror at random minutes each hour
+Description=Timer to sync Debian Mirror every 15 minutes
 
 [Timer]
-OnCalendar=hourly
-RandomizedDelaySec=3600
+OnCalendar=*:0/15
 Persistent=true
 
 [Install]
